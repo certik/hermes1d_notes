@@ -53,4 +53,32 @@ Some notes to our Hermes 1D code.
 
 \section{Introduction}
 
+A lots of (but not all) ODEs can be put into the form
+$$
+{\d u_1\over\d x}=f_1(u_1, u_2, \dots, u_N, x)
+$$
+$$
+...
+$$
+$$
+{\d u_N\over\d x}=f_N(u_1, u_2, \dots, u_N, x)
+$$
+We use the notation ${\bf U}\equiv(u_1,\dots,u_N)$, ${\bf
+F}\equiv(f_1,\dots,f_N)$:
+$${\d {\bf U}\over\d x}={\bf F}({\bf U}, x)$$
+We then define ${\bf R}({\bf U})={\d {\bf U}\over\d x}-{\bf F}({\bf U}, x)$, so
+we want to find such $u_1$, \dots, $u_N$ that:
+$${\bf R}({\bf U})=0$$
+Well, actually ${\bf R}$ is more like this:
+$$R_i(Y)=\int_0^T{\partial\varphi_j\over\partial x}\varphi_i-
+f_i(Y)\varphi_i\d x
+$$
+This is in general non-linear problem, so we calculate a Jacobian:
+$$J(Y)={\partial R_i\over\partial u_j}(Y)=\int_0^T{\partial\varphi_j\over\partial x}\varphi_i-
+{\partial f_i\over \partial u_j}(Y)\varphi_j\varphi_i\d x
+$$
+And then solve iteratively
+$$J(Y^n)\ \delta Y^{n+1}=-R(Y^n)$$
+where $\delta Y^{n+1} = Y^{n+1}-Y^{n}$.
+
 \end{document}
