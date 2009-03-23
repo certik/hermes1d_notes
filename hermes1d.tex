@@ -439,15 +439,18 @@ E\int_0^{2\pi}\d\varphi\int_0^\pi\d\theta\int_0^a\d r\,
 \psi({\bf x})v({\bf x})r^2\sin\theta
 $$
 The 3d eigenvectors $\psi({\bf x})$ however are not spherically symmetric.
-Nevertheless we can probably choose our basis as
+Nevertheless we can still proceed by choosing our basis as
 $$v_{ilm}({\bf x})=\phi_{il}(r)Y_{lm}(\theta, \varphi)$$
 and seek our solution as
 $$\psi({\bf x})=\sum_{jlm}y_{jlm}\phi_{jl}(r)Y_{lm}(\theta, \varphi)$$
-Using the properties of spherical harmonics:
+Using the properties of spherical harmonics and the gradient:
 $$\int Y_{lm} Y_{l'm'} \sin\theta\,\d\theta\,\d\varphi=
 \delta_{ll'}\delta_{mm'}$$
 $$\int r^2\nabla Y_{lm} \nabla Y_{l'm'} \sin\theta\,\d\theta\,\d\varphi=
 l(l+1)\delta_{ll'}\delta_{mm'}$$
+$$\nabla f = {\partial f\over \partial r}\boldsymbol{\hat r} + {1\over r}
+{\partial f\over\partial\theta}\boldsymbol{\hat\theta}+{1\over r\sin\theta}
+{\partial f\over\partial\phi}\boldsymbol{\hat\phi}$$
 the weak formulation becomes:
 $$
 \left(\int_0^a
