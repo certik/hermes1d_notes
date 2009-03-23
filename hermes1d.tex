@@ -314,6 +314,13 @@ and we will solve it on the interval $(a, b)$ with the boundary condition
 $\psi(a)=\psi(b)=0$. The weak formulation is
 $$
 \int_a^b{1\over2}{\d\psi(x)\over\d x}{\d v(x)\over\d x}+V(x)\psi(x)v(x)\,\d x
+-\left[{\d\psi(x)\over\d x}v(x)\right]^a_b
+=E\int_a^b\psi(x)v(x)\,\d x
+$$
+but due to the boundary condition $v(a)=v(b)=0$ so
+$\left[\psi'(x)v(x)\right]^a_b=0$ and we get
+$$
+\int_a^b{1\over2}{\d\psi(x)\over\d x}{\d v(x)\over\d x}+V(x)\psi(x)v(x)\,\d x
 =E\int_a^b\psi(x)v(x)\,\d x
 $$
 And the finite element formulation is then $\psi(x)=\sum_j y_j\phi_j(x)$ and
