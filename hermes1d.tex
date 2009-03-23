@@ -154,19 +154,19 @@ Let $1 \le i, j \le N$.
 It is easy to calculate that
 $$
 \frac{\partial R_i}{\partial y_j}
-= \int_0^T \frac{\partial f_{m(i)}}{\partial u_{m(j)}}(u_1, u_2, \ldots, u_m, u'_1, u'_2, \ldots, u'_m, x)v_jv_i
+= \int_0^T \frac{\partial f_{m(i)}}{\partial u_{n(j)}}(u_1, u_2, \ldots, u_m, u'_1, u'_2, \ldots, u'_m, x)v_jv_i
 $$
 \be\label{newt1}
-+ \frac{\partial f_{m(i)}}{\partial u'_{m(j)}}(u_1, u_2, \ldots, u_m, u'_1, u'_2, \ldots, u'_m, x)v'_jv_i \, \d t = 0.
++ \frac{\partial f_{m(i)}}{\partial u'_{n(j)}}(u_1, u_2, \ldots, u_m, u'_1, u'_2, \ldots, u'_m, x)v'_jv_i \, \d t = 0.
 \ee
 Here, the function $m(i)$ takes a global index $1 \le i \le N$ and returns the
 index of the function $f_{m(i)}$ which is associated with $R_i$. Analogously,
-$m(j)$ takes a global index $1 \le j \le N$ and returns the index of the
-solution component $u_{m(i)}$ where the basis function $v_j$ belongs to.
+$n(j)$ takes a global index $1 \le j \le N$ and returns the index of the
+solution component $u_{n(i)}$ where the basis function $v_j$ belongs to.
 
 The integral in (\ref{newt1}) has two parts because the functions $u_s$ and
 $u'_s$ depend on the same solution coefficients.  Do not be confused by the
-derivatives with respect to $u'_{m(j)}$ in (\ref{newt1}).  The functions $u_s$
+derivatives with respect to $u'_{n(j)}$ in (\ref{newt1}).  The functions $u_s$
 and $u'_s$ are used as independent variables for the differentiation.
 
 
