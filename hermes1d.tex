@@ -334,6 +334,45 @@ $$
 B_{ij}=\int_a^b\phi_i(x)\phi_j(x)\,\d x
 $$
 
+\subsection{Radial Schr\"odinger Equation}
+Another important example is the three dimensional one particle time
+independent Schr\"odinger equation for a spherically symmetric potential:
+$$
+-{1\over2}\nabla^2\psi({\bf x})+V(r)\psi({\bf x})=E\psi({\bf x})
+$$
+The solution is then:
+$$\psi({\bf x})=\sum_{nlm}c_{nlm}R_{nl}(r)Y_{lm}\left({\bf x}\over r\right)$$
+where $R_{nl}(r)$ satisfies the radial Schr\"odinger equation (from now on we
+just write $R(r)$):
+$$-{1\over2}R''(x)-{1\over r}R'(x)+\left(V+{l(l+1)\over2r^2}\right)R(x)=ER(x)$$
+Again there are many types of boundary conditions, but the most common case is
+$\lim_{r\to\infty}R(r)=0$ and $R(0)=1$ or $R(0)=0$. One solves this equation on
+the interval $(0, a)$ for large enough $a$.
+
+This can be done with the similar
+finite element formulation as in the previous example, only the
+matrix $A$ will not be symmetric (and there are two ways of writing it,
+depending on if you apply the per-partes on the term $R'(r)v(r)$).
+
+A more common approach is to write a weak formulation for
+the 3D problem in cartesian coordinates:
+$$
+\int_\Omega{1\over2}\nabla\psi({\bf x})\nabla v({\bf x})+V(r)\psi({\bf x})v({\bf
+x})\,\d^3 x
+=E\int_\Omega\psi({\bf x})v({\bf x})\,\d^3 x
+$$
+and only then transform to spherical coordinates:
+$$
+\int_0^{2\pi}\d\varphi\int_0^\pi\d\theta\int_0^a\d r
+\left({1\over2}\nabla\psi({\bf x})\nabla v({\bf x})+V(r)\psi({\bf
+x})v({\bf x})\right)r^2\sin\theta=
+$$
+$$
+=
+E\int_0^{2\pi}\d\varphi\int_0^\pi\d\theta\int_0^a\d r
+\psi({\bf x})v({\bf x})r^2\sin\theta
+$$
+
 \section{TODO list}
 
 Currently, the code can handle an arbitrary number of equations and solve them
