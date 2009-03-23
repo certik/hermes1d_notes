@@ -175,11 +175,13 @@ and $u'_s$ are used as independent variables for the differentiation.
 The best way to understand the above machinery is to solve examples which we
 will do in this section.
 
-\subsection{Classical Linear Harmonic Oscillator}
+\subsection{Classical Harmonic Oscillator}
 
-We want to solve the equation:
+One of the important equations from the classical mechanics is the harmonic
+oscillator equation:
 $$u''(x)+u(x)=0$$
-with boundary conditions $u(0)=0$ and $u'(0)=1$ so the solution is $u(x)=\sin
+and for this example we choose a simple boundary conditions $u(0)=0$ and
+$u'(0)=1$ so the solution is $u(x)=\sin
 x$. First let's rewrite the equation into the form (\ref{one}):
 $$
 {\d u_1\over\d x}=g_1(u_1, u_2, x)=u_2
@@ -275,6 +277,62 @@ $$u_1(0)=0$$
 $$u_2(0)=1$$
 and Hermes will solve for $\bfF=0$. This is implemented in
 \texttt{examples/sin.py}.
+
+\subsection{Quantum Harmonic Oscillator}
+
+The corresponding quantum mechanics problem to the previous one is the quantum
+harmonic oscillator for one particle in 1D:
+$$
+i\hbar{\partial\over\partial t}\psi(x, t)=
+-{\hbar^2\over2m}{\partial^2\over\partial x^2}\psi(x,t)+V(x)\psi(x,t)
+$$
+$$
+V(x)={1\over2}m\omega^2x^2
+$$
+This is a partial differential equation for the time evolution of the wave
+function $\psi(x, t)$, but one method to solve it is the
+eigenvalues expansion:
+$$\psi(x,t) = \sum_E c_E\psi_E(x)e^{-{i\over\hbar}Et}$$
+where the sum goes over the whole spectrum (for continuous spectrum the sum
+turns into an integral), the $c_E$ coefficients are determined from the initial condition
+and $\psi_E(x)$ satisfies the one dimensional one particle time independent
+Schr\"odinger equation:
+$$
+-{\hbar^2\over2m}{\d^2\over\d x^2}\psi_E(x)+V(x)\psi_E(x)=E\psi_E(x)
+$$
+and this is just an ODE and thus can be solved with Hermes1D. There can be many
+types of boundary conditions for this equation, depending on the physical
+problem, but in our case we simply have $\lim_{x\to\pm\infty}\psi_E(x)=0$ and
+the normalization condition $\int_{-\infty}^\infty|\psi_E(x)|^2\d x=1$.
+
+We can set $m=\hbar=1$ and from now on we'll just write $\psi(x)$ instead of
+$\psi_E(x)$:
+$$
+-{1\over2}{\d^2\over\d x^2}\psi(x)+V(x)\psi(x)=E\psi(x)
+$$
+and we will solve it on the interval $(a, b)$ with the boundary condition
+$\psi(a)=\psi(b)=0$. The weak formulation is
+$$
+\int_a^b{1\over2}{\d\psi(x)\over\d x}{\d v(x)\over\d x}+V(x)\psi(x)v(x)\,\d x
+=E\int_a^b\psi(x)v(x)\,\d x
+$$
+And the finite element formulation is then $\psi(x)=\sum_j y_j\phi_j(x)$ and
+$v=\phi_i(x)$:
+$$
+\int_a^b{1\over2}\phi_i'(x)\phi_j'(x)+V(x)\phi_i(x)\phi_j(x)\,\d x\ y_j
+=E\int_a^b\phi_i(x)\phi_j(x)\,\d x\ y_j
+$$
+which is a generalized eigenvalue problem:
+$$
+A_{ij}y_j=EB_{ij}y_j
+$$
+with
+$$
+A_{ij}=\int_a^b{1\over2}\phi_i'(x)\phi_j'(x)+V(x)\phi_i(x)\phi_j(x)\,\d x
+$$
+$$
+B_{ij}=\int_a^b\phi_i(x)\phi_j(x)\,\d x
+$$
 
 \section{TODO list}
 
