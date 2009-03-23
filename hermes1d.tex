@@ -170,9 +170,111 @@ derivatives with respect to $u'_{n(j)}$ in (\ref{newt1}).  The functions $u_s$
 and $u'_s$ are used as independent variables for the differentiation.
 
 
-\section{Numerical examples}
+\section{Numerical Examples}
 
-COMING SOON
+The best way to understand the above machinery is to solve examples which we
+will do in this section.
+
+\subsection{Classical Linear Harmonic Oscillator}
+
+We want to solve the equation:
+$$u''(x)+u(x)=0$$
+with boundary conditions $u(0)=0$ and $u'(0)=1$ so the solution is $u(x)=\sin
+x$. First let's rewrite the equation into the form (\ref{one}):
+$$
+{\d u_1\over\d x}=g_1(u_1, u_2, x)=u_2
+$$
+$$
+{\d u_2\over\d x}=g_2(u_1, u_2, x)=-u_1
+$$
+where $u_1=u$ is the function we seek and $u_2=u'$ is its derivative.
+Then let's write it in the form (\ref{two}):
+$$
+f_1(u_1, u_2, u'_1, u'_2, x) = g_1(u_1, u_2, x)-u_1'=-u_1'+u_2 = 0,
+$$
+$$
+f_2(u_1, u_2, u'_1, u'_2, x) = g_2(u_1, u_2, x)-u_2'=-u_2'-u_1 = 0,
+$$
+and (\ref{qqq}):
+$$
+\bfF(\bfU, \bfU', x) = 0
+$$
+where ${\bfU} = (u_1, u_2)$ and ${\bfF} = (f_1, f_2)=(-u_1'+u_2, -u_2'-u_1)$.
+The weak formulation is:
+$$
+R_1(\bfY) = \int_0^T f_1(u_1, u_2, u'_1, u'_2, x)v_1 \, \d t =
+\int_0^T (-u_1'+u_2)v_1 \, \d t
+=0,
+$$
+$$
+R_2(\bfY) = \int_0^T f_2(u_1, u_2, u'_1, u'_2, x)v_1 \, \d t =
+\int_0^T (-u_2'-u_1)v_2 \, \d t
+=0,
+$$ To evaluate the Jacobi matrix D$\bfR/$D$\bfY$ for the Newton's iteration, we need the following
+Jacobians:
+$$
+\left({{\rm D}\bfF\over{\rm D}\bfU}\right)_{mn}=
+\frac{\partial f_m}{\partial u_n}(u_1, u_2, u'_1, u'_2, x)
+=
+\left( \begin{array}{c}
+-u_1'+u2 \\
+-u_2'-u1 \\
+\end{array} \right)
+\left( \begin{array}{cc}
+\overleftarrow{\partial_{u_1}} & \overleftarrow{\partial_{u_2}} \\
+\end{array} \right)
+=
+\left( \begin{array}{cc}
+0 & 1 \\
+-1 & 0 \\
+\end{array} \right)
+$$
+$$
+\left({{\rm D}\bfF\over{\rm D}\bfU'}\right)_{mn}=
+\frac{\partial f_m}{\partial u'_n}(u_1, u_2, u'_1, u'_2, x)
+=
+\left( \begin{array}{c}
+-u_1'+u2 \\
+-u_2'-u1 \\
+\end{array} \right)
+\left( \begin{array}{cc}
+\overleftarrow{\partial_{u_1'}} & \overleftarrow{\partial_{u_2'}} \\
+\end{array} \right)
+=
+\left( \begin{array}{cc}
+-1 & 0 \\
+0 & -1 \\
+\end{array} \right)
+$$
+where $\overleftarrow{\partial_{u_1}}$ is a partial derivative with respect to
+$u_1$ but acting to the left.
+
+To solve this problem with Hermes, all we have to do is to specify the
+following information:
+$${\bfF} =
+\left( \begin{array}{c}
+-u_1'+u2 \\
+-u_2'-u1 \\
+\end{array} \right)
+$$
+$$
+{{\rm D}\bfF\over{\rm D}\bfU}=
+\left( \begin{array}{cc}
+0 & 1 \\
+-1 & 0 \\
+\end{array} \right)
+$$
+$$
+{{\rm D}\bfF\over{\rm D}\bfU'}=
+\left( \begin{array}{cc}
+-1 & 0 \\
+0 & -1 \\
+\end{array} \right)
+$$
+$$u_1(0)=0$$
+$$u_2(0)=1$$
+and Hermes will solve for $\bfF=0$. This is implemented in
+\texttt{examples/sin.py}.
 
 \section{TODO list}
 
