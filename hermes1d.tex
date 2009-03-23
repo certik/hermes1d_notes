@@ -342,7 +342,9 @@ $$
 B_{ij}=\int_a^b\phi_i(x)\phi_j(x)\,\d x
 $$
 
+
 \subsection{Radial Schr\"odinger Equation}
+
 Another important example is the three dimensional one particle time
 independent Schr\"odinger equation for a spherically symmetric potential:
 $$
@@ -357,10 +359,65 @@ Again there are many types of boundary conditions, but the most common case is
 $\lim_{r\to\infty}R(r)=0$ and $R(0)=1$ or $R(0)=0$. One solves this equation on
 the interval $(0, a)$ for large enough $a$.
 
-This can be done with the similar
-finite element formulation as in the previous example, only the
-matrix $A$ will not be symmetric (and there are two ways of writing it,
-depending on if you apply the per-partes on the term $R'(r)v(r)$).
+The procedure is similar to the previous example, the weak formulation is:
+$$\int_0^a {1\over2}R'(x)v'(x)-{1\over r}R'(x)v(x)+
+\left(V+{l(l+1)\over2r^2}\right)R(x)v(x)\,\d x
+-[R'(x)v(x)]_0^a
+=
+$$
+$$
+=E\int_0^aR(x)v(x)\,\d x
+$$
+We also have both $R(0)$ and $R(a)$ prescribed, so $v(0)=v(a)=0$, thus
+$[R'(x)v(x)]_0^a=0$, hence:
+$$\int_0^a {1\over2}R'(x)v'(x)-{1\over r}R'(x)v(x)+
+\left(V+{l(l+1)\over2r^2}\right)R(x)v(x)\,\d x
+=
+E\int_0^aR(x)v(x)\,\d x
+$$
+Notice the matrix on the left hand side is not symmetric. There is another way
+of writing the weak formulation by applying per-partes to the $R'(r)v(r)$ term:
+$$-\int_0^a{1\over r}R'(x)v(x)\d x=
+$$
+$$
+=\int_0^a{1\over r}R(x)v'(x)\d x
+-\int_0^a{1\over r^2}R(x)v(x)\d x
+-\left[{1\over r}R'(x)v'(x)\right]_0^a
++\left[{1\over r^2}R'(x)v(x)\right]_0^a
+$$
+We can use $v(a)=0$ and $R'(a)=0$ to simplify a bit:
+$$-\int_0^a{1\over r}R'(x)v(x)\d x=
+$$
+$$
+=\int_0^a{1\over r}R(x)v'(x)\d x
+-\int_0^a{1\over r^2}R(x)v(x)\d x
++\lim_{r\to0}\left({R'(x)v'(x)\over r}-{R'(x)v(x)\over r^2}\right)
+$$
+Since $R(x)\sim r^l$ near $r=0$, we can see that for $l\ge3$ the limits
+on the right hand side are zero, but for $l=0, 1, 2$ they give us more
+conditions to satisfy, but let's not worry about it for now and just set them
+to zero. Then our weak formulation looks like:
+$$\int_0^a {1\over2}R'(x)v'(x)+{1\over r}R(x)v'(x)+
+\left(V+{l(l+1)\over2r^2}-{1\over r^2}\right)R(x)v(x)\,\d x
+=
+E\int_0^aR(x)v(x)\,\d x
+$$
+or
+$$\int_0^a {1\over2}R'(x)v'(x)+{1\over r}R(x)v'(x)+
+\left(V+{(l-2)(l+1)\over2r^2}\right)R(x)v(x)\,\d x
+=
+E\int_0^aR(x)v(x)\,\d x
+$$
+The left hand side is also not symmetric, however we can now take an average of
+our both weak formulations to get a symmetric weak formulation:
+$$\int_0^a {1\over2}R'(x)v'(x)+{R(x)v'(x)-R'(x)v(x)\over 2r}+
+\left(V+{l(l+1)-1\over2r^2}\right)R(x)v(x)\,\d x
+=
+$$
+$$
+=
+E\int_0^aR(x)v(x)\,\d x
+$$
 
 A more common approach is to write a weak formulation for
 the 3D problem in cartesian coordinates:
