@@ -23,6 +23,9 @@
 \newcommand{\bfu}{\mbox{\boldmath $u$}}
 \newcommand{\bfF}{\mbox{\boldmath $F$}}
 \newcommand{\bfJ}{\mbox{\boldmath $J$}}
+\newcommand{\bfU}{\mbox{\boldmath $U$}}
+\newcommand{\bfY}{\mbox{\boldmath $Y$}}
+\newcommand{\bfR}{\mbox{\boldmath $R$}}
 \newcommand{\bfg}{\mbox{\boldmath $g$}}
 \newcommand{\bfc}{\mbox{\boldmath $c$}}
 \newcommand{\bfxi}{\mbox{\boldmath $\xi$}}
@@ -40,45 +43,149 @@
 \begin{document}
 
 \begin{center}
-{\huge Hermes1D notes}\\
+{\huge Hermes1D}\\[2mm]
+{\Large an $hp$-FEM solver for ODE}\\
 \vspace{0.6cm}
 Ondřej Čertík, Pavel Šolín\\
 $hp$-FEM group, University of Nevada, Reno\\
 http://hpfem.math.unr.edu\\
 March 2009
 \end{center}
-\begin{abstract}
-Some notes to our Hermes 1D code.
-\end{abstract}
 
-\section{Introduction}
+\section{Introduction and motivation}
 
-A lots of (but not all) ODEs can be put into the form
+When one speaks about the numerical solution of ODEs, one 
+usually has in mind initial value problems for equations 
+of the form 
+
 $$
-{\d u_1\over\d x}=f_1(u_1, u_2, \dots, u_N, x)
+{\d u_1\over\d x}=g_1(u_1, u_2, \dots, u_m, x),
 $$
+\be\label{one}
+\vdots
+\ee
 $$
-...
+{\d u_m\over\d x}=g_m(u_1, u_2, \dots, u_m, x).
 $$
+These are solved in a finite time interval $(0,T)$ using various time-stepping 
+methods. There are tons of those and some are quite sophisticated (meaning 
+multistep, higher-order, adaptive, etc.). But all of them have the following 
+common shortcomings:
+\begin{itemize}
+\item We would like to prescribe the initial value at $t = 0$ for some solution 
+      components and the end-time values at $t = T$ for others. Standard 
+      time stepping methods do not allow this.
+\item Global error control is problematic. One only can regulate the time step
+      size locally -- this is something like 
+      "forward mesh refinement''. But one cannot do "backward mesh refinement''
+      or coarsening easily. 
+\item We would like to prescribe a tolerance for the global error and then 
+      have the problem solved adaptively until this error tolerance is reached,
+      without underresolving or overresolving too much. This is virtually 
+      impossible with adaptive time stepping methods. 
+\item Standard time integration methods cannot change their order during the 
+      computation. For example, an adaptive RK4 method remains 4-order 
+      all the time. This is an analogy for $h$-refinement in FEM, and obviously 
+      it is highly inefficient. Correctly, the method should either do small low-order
+      steps or large high-order steps to be efficient. We would like to see such an 
+      analogy of $hp$-refinement in ODE methods. 
+\item We would like to solve more general ODEs than (\ref{one}).
+\end{itemize}
+This is why we decided to apply the $hp$-FEM methodology to ODEs and see what happens.
+
+\section{Equations}
+
+We implemented the first version of Hermes1D during one day while 
+returning from the 2009 SIAM CSE conference. First we considered the 
+form (\ref{one}) but then we realized that with no extra work we can actually 
+assume a much more general implicit form
+
 $$
-{\d u_N\over\d x}=f_N(u_1, u_2, \dots, u_N, x)
+f_1(u_1, u_2, \ldots, u_m, u'_1, u'_2, \ldots, u'_m, x) = 0,
 $$
-We use the notation ${\bf U}\equiv(u_1,\dots,u_N)$, ${\bf
-F}\equiv(f_1,\dots,f_N)$:
-$${\d {\bf U}\over\d x}={\bf F}({\bf U}, x)$$
-We then define ${\bf R}({\bf U})={\d {\bf U}\over\d x}-{\bf F}({\bf U}, x)$, so
-we want to find such $u_1$, \dots, $u_N$ that:
-$${\bf R}({\bf U})=0$$
-Well, actually ${\bf R}$ is more like this:
-$$R_i(Y)=\int_0^T{\partial\varphi_j\over\partial x}\varphi_i-
-f_i(Y)\varphi_i\d x
+\be\label{two}
+\vdots
+\ee
 $$
-This is in general non-linear problem, so we calculate a Jacobian:
-$$J(Y)={\partial R_i\over\partial u_j}(Y)=\int_0^T{\partial\varphi_j\over\partial x}\varphi_i-
-{\partial f_i\over \partial u_j}(Y)\varphi_j\varphi_i\d x
+f_m(u_1, u_2, \ldots, u_m, u'_1, u'_2, \ldots, u'_m, x) = 0.
 $$
-And then solve iteratively
-$$J(Y^n)\ \delta Y^{n+1}=-R(Y^n)$$
-where $\delta Y^{n+1} = Y^{n+1}-Y^{n}$.
+Note that (\ref{two}) contains (\ref{one}) as a special case.
+In fact, (\ref{two}) can be written shortly as 
+\be\label{qqq}
+\bfF(\bfU, \bfU', x) = 0
+\ee
+where ${\bfU} = (u_1,\dots,u_m)$ and ${\bfF} = (f_1,\dots,f_m)$. 
+
+\subsubsection*{Boundary conditions}
+
+So far, we 
+have considered Dirichlet boundary conditions only, which can be imposed
+either at the initial time $t = 0$ or the end-time $t = T$. Exactly one 
+condition per solution component has to be defined.
+
+
+
+\section{$hp$-FEM discretization}
+
+As always, the finite element discretization starts from a weak formulation.
+With (\ref{two}), the situation is easy and we have 
+
+$$
+R_1(\bfY) = \int_0^T f_1(u_1, u_2, \ldots, u_m, u'_1, u'_2, \ldots, u'_m, x)v_1 \, \d t = 0,
+$$
+\be\label{three}
+\vdots
+\ee
+$$
+R_N(\bfY) = \int_0^T f_m(u_1, u_2, \ldots, u_m, u'_1, u'_2, \ldots, u'_m, x)v_N \, \d t = 0.
+$$
+Here $v_1, v_2, \ldots, v_N$ are all basis functions for all solution components
+(we can describe this more accurately if needed).
+In the standard sense, all basis functions corresponding to the solution component $u_i$ 
+are zero where $u_i$ has a Dirichlet boundary condition.
+The vector $\bfY = (y_1, y_2, \ldots, y_N)$ comprises all unknown coefficients 
+of the finite element basis functions for all solution components. The meshes
+for the solution components $u_1, u_2, \ldots, u_m$ could (more precisely: {\em should})
+be different but for now we assume that they are the same. 
+
+\section{Newton's method}
+
+We will drive the residual vector $\bfR = (R_1, R_2, \ldots, R_N)$ to zero using the Newton's
+method. For that, we need the Jacobi matrix D$\bfR/$D$\bfY$. 
+
+Let $1 \le i, j \le N$. 
+It is easy to calculate that 
+$$
+\frac{\partial R_i}{\partial y_j} 
+= \int_0^T \frac{\partial f_{m(i)}}{\partial u_{m(j)}}(u_1, u_2, \ldots, u_m, u'_1, u'_2, \ldots, u'_m, x)v_jv_i
+$$
+\be\label{newt1}
++ \frac{\partial f_{m(i)}}{\partial u'_{m(j)}}(u_1, u_2, \ldots, u_m, u'_1, u'_2, \ldots, u'_m, x)v'_jv_i \, \d t = 0.
+\ee
+Here, the function $m(i)$ takes a global index $1 \le i \le N$ and returns the index of the 
+function $f_{m(i)}$ which is associated with $R_i$. Analogously, $m(j)$ takes 
+a global index $1 \le j \le N$ and returns the index of the solution component $u_{m(i)}$ 
+where the basis function $v_j$ belongs to.
+
+The integral in (\ref{newt1}) has two parts because 
+the functions $u_s$ and $u'_s$ depend on the same solution coefficients.
+Do not be confused by the derivatives with respect to $u'_{m(j)}$ in (\ref{newt1}). 
+The functions $u_s$ and $u'_s$ are used as independent variables for the differentiation.
+
+
+\section{Numerical examples}
+
+COMING SOON
+
+\section{TODO list}
+
+Currently, the code can handle an arbitrary number of equations 
+and solve them with elements up to the 10th degree. However, 
+the meshes still have to be equidistant, same for every solution 
+component, and the polynomial degree must be the same for all
+elements. The code is not $hp$-adaptive yet. These things will be 
+fixed as time permits.
+
+
 
 \end{document}
