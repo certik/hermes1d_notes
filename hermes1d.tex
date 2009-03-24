@@ -351,10 +351,26 @@ $$
 -{1\over2}\nabla^2\psi({\bf x})+V(r)\psi({\bf x})=E\psi({\bf x})
 $$
 The way to solve it is to separate the equation into radial and angular parts
-by writing the laplace operator as:
+by writing the Laplace operator in spherical coordinates as:
 $$
-\nabla^2f = ...
+\nabla^2f = 
+{\partial^2 f\over\partial\rho^2}
++{2\over \rho}{\partial^2 f\over\partial\rho^2}
+-{L^2\over \rho^2}
 $$
+$$
+L^2=
+-{\partial^2 f\over\partial\theta^2}
+-{1\over\sin^2\theta}{\partial^2 f\over\partial\phi^2}
+-{1\over\tan\theta}{\partial f\over\partial\theta}
+$$
+Substituting $\psi=R(\rho)Y(\theta,\phi)$ into the Schr\"odinger equation
+yields:
+$$-{1\over2}\nabla^2(RY)+VRY=ERY$$
+$$-{1\over2}R''Y-{1\over\rho}R'Y+{L^2RY\over2\rho^2}+VRY=ERY$$
+Using the fact that $L^2Y=l(l+1)Y$ we can cancel $Y$ and we get the radial
+Schr\"odinger equation:
+$$-{1\over2}R''-{1\over\rho}R'+{l(l+1)R\over2\rho^2}+VR=ER$$
 The solution is then:
 $$\psi({\bf x})=\sum_{nlm}c_{nlm}R_{nl}(r)Y_{lm}\left({\bf x}\over r\right)$$
 where $R_{nl}(r)$ satisfies the radial Schr\"odinger equation (from now on we
@@ -467,24 +483,25 @@ $$
 $$ = E\int_0^ar^2 \phi_{il}(r)\phi_{jl}(r)\,\d r\ y_{jlm} $$
 where both $l$ and $m$ indices are given by the indices of the particular base
 function $v_{ilm}$. The $X$ term is (schematically):
-$$X=\int 2 \phi_{il}(r)Y_{lm}(\theta,\varphi)\nabla\phi_{jl}\nabla Y_{lm}$$
-But it looks like it's actually zero, because
+$$X=\int r^2\sin\theta(r)Y_{lm}(\theta,\varphi)
+(\phi_{il}\nabla\phi_{jl}+\nabla\phi_{il}\phi_{jl})
+\nabla Y_{lm}$$
+Unfortunately I don't know what to do with the term.
+There is an interesting identity:
 $$\int r{\bf \hat r} Y_{lm} \nabla Y_{l'm'} \sin\theta\,\d\theta\,\d\varphi=
 0$$
-But one should check that all the $r$ symbols match. One would expect it is not
-zero though, since we should get some mixed term $\int\phi(r) \phi'(r)$ as if we
-first transform to radial coordinates and then do the weak formulation as we
-indicated above.
+But it cannot be applied, because we have one more $r$ in the expression.
+One would expect it is not zero though, since we should get some mixed term
+$\int\phi(r) \phi'(r)$ as if we first transform to radial coordinates and then
+do the weak formulation as we indicated above.
 
 
 \section{TODO list}
 
 Currently, the code can handle an arbitrary number of equations and solve them
-with elements up to the 10th degree. However, the meshes still have to be
-equidistant, same for every solution component, and the polynomial degree must
-be the same for all elements. The code is not $hp$-adaptive yet. These things
-will be fixed as time permits.
-
+with elements up to the 10th degree. However, the meshes still have to be the
+same for every solution component. The code is not $hp$-adaptive yet. These
+things will be fixed as time permits.
 
 
 \end{document}
