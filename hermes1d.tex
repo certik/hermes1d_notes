@@ -375,22 +375,53 @@ The solution is then:
 $$\psi({\bf x})=\sum_{nlm}c_{nlm}R_{nl}(r)Y_{lm}\left({\bf x}\over r\right)$$
 where $R_{nl}(r)$ satisfies the radial Schr\"odinger equation (from now on we
 just write $R(r)$):
-$$-{1\over2}R''(x)-{1\over r}R'(x)+\left(V+{l(l+1)\over2r^2}\right)R(x)=ER(x)$$
+$$-{1\over2}R''(r)-{1\over r}R'(r)+\left(V+{l(l+1)\over2r^2}\right)R(r)=ER(r)$$
 Again there are many types of boundary conditions, but the most common case is
 $\lim_{r\to\infty}R(r)=0$ and $R(0)=1$ or $R(0)=0$. One solves this equation on
 the interval $(0, a)$ for large enough $a$.
 
-The procedure is similar to the previous example, the weak formulation is:
-$$\int_0^a {1\over2}R'(x)v'(x)-{1\over r}R'(x)v(x)+
-\left(V+{l(l+1)\over2r^2}\right)R(x)v(x)\,\d x
--[R'(x)v(x)]_0^a
+The procedure is similar to the previous example, only we need to remember that
+we always have to use covariant integration (in the previous example the
+covariant integration was the same as the coordinate integration),
+in this case $r^2\sin\theta \d
+r\d\theta\d\phi$, so the weak formulation is:
+$$\int \left(-{1\over2}R''(r)-{1\over
+r}R'(r)+\left(V+{l(l+1)\over2r^2}\right)R(r)\right)v(r)r^2\sin\theta \d
+r\d\theta\d\phi=$$
+$$
+=\int ER(r) v(r)r^2\sin\theta \d r\d\theta\d\phi$$
+Integrating over the angles gives $4\pi$ which we cancel out at both sides and
+we get:
+$$\int_0^a \left(-{1\over2}R''(r)-{1\over
+r}R'(r)+\left(V+{l(l+1)\over2r^2}\right)R(r)\right)v(r)r^2 \d r=$$
+$$
+=E\int_0^a R(r) v(r)r^2 \d r$$
+We apply per partes to the first two terms on the left hand side:
+$$\int_0^a \left(-{1\over2}R''(r)-{1\over r}R'(r)\right)v(r)r^2 \d r
+=\int_0^a -{1\over2r^2}\left(r^2 R'(r)\right)'v(r)r^2 \d r=
+$$
+$$
+=\int_0^a -{1\over2}\left(r^2 R'(r)\right)'v(r) \d r
+=\int_0^a {1\over2}r^2 R'(r)v'(r) \d r+[r^2R'(r)v(r)]_0^a=
+$$
+$$
+=\int_0^a {1\over2} R'(r)v'(r) r^2\d r
+$$
+We used the fact that we have both $R(0)$ and $R(a)$ prescribed, so
+$v(0)=v(a)=0$. The weak formulation is then:
+$$\int_0^a {1\over2}R'(r)v'(r)r^2+
+\left(V+{l(l+1)\over2r^2}\right)R(r)v(r)r^2\,\d r
 =
+E\int_0^aR(r)v(r)r^2\,\d r
 $$
+or
+$$\int_0^a {1\over2}R'(r)v'(r)r^2+
+V(r)R(r)v(r)r^2+{l(l+1)\over2} R(r)v(r)\,\d r
+=
+E\int_0^aR(r)v(r)r^2\,\d r
 $$
-=E\int_0^aR(x)v(x)\,\d x
-$$
-We also have both $R(0)$ and $R(a)$ prescribed, so $v(0)=v(a)=0$, thus
-$[R'(x)v(x)]_0^a=0$, hence:
+
+Note --- if we didn't integrate covariantly, we would get:
 $$\int_0^a {1\over2}R'(x)v'(x)-{1\over r}R'(x)v(x)+
 \left(V+{l(l+1)\over2r^2}\right)R(x)v(x)\,\d x
 =
