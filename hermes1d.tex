@@ -421,7 +421,62 @@ V(r)R(r)v(r)r^2+{l(l+1)\over2} R(r)v(r)\,\d r
 E\int_0^aR(r)v(r)r^2\,\d r
 $$
 
-Note --- if we didn't integrate covariantly, we would get:
+Another (equivalent) approach is to write a weak formulation for
+the 3D problem in cartesian coordinates:
+$$
+\int_\Omega{1\over2}\nabla\psi({\bf x})\nabla v({\bf x})+V(r)\psi({\bf x})v({\bf
+x})\,\d^3 x
+=E\int_\Omega\psi({\bf x})v({\bf x})\,\d^3 x
+$$
+and only then transform to spherical coordinates:
+$$
+\int_0^{2\pi}\d\varphi\int_0^\pi\d\theta\int_0^a\d r
+\left({1\over2}\nabla\psi({\bf x})\nabla v({\bf x})+V(r)\psi({\bf
+x})v({\bf x})\right)r^2\sin\theta=
+$$
+$$
+=
+E\int_0^{2\pi}\d\varphi\int_0^\pi\d\theta\int_0^a\d r\,
+\psi({\bf x})v({\bf x})r^2\sin\theta
+$$
+The 3d eigenvectors $\psi({\bf x})$ however are not spherically symmetric.
+Nevertheless we can still proceed by choosing our basis as
+$$v_{ilm}({\bf x})=\phi_{il}(r)Y_{lm}(\theta, \varphi)$$
+and seek our solution as
+$$\psi({\bf x})=\sum_{jlm}y_{jlm}\phi_{jl}(r)Y_{lm}(\theta, \varphi)$$
+Using the properties of spherical harmonics and the gradient:
+$$\int Y_{lm} Y_{l'm'} \sin\theta\,\d\theta\,\d\varphi=
+\delta_{ll'}\delta_{mm'}$$
+$$\int r^2\nabla Y_{lm} \nabla Y_{l'm'} \sin\theta\,\d\theta\,\d\varphi=
+l(l+1)\delta_{ll'}\delta_{mm'}$$
+$$\nabla f = {\partial f\over \partial r}\boldsymbol{\hat r} + {1\over r}
+{\partial f\over\partial\theta}\boldsymbol{\hat\theta}+{1\over r\sin\theta}
+{\partial f\over\partial\phi}\boldsymbol{\hat\phi}$$
+the weak formulation becomes:
+$$
+\left(\int_0^a
+{1\over2}r^2\phi_{il}'(r)\phi_{jl}'(r)+
+{1\over2}X+
+{l(l+1)\over2}\phi_{il}(r)\phi_{jl}(r)+
+r^2V(r)\phi_{il}(r)\phi_{jl}(r)\,\d r\right)y_{jlm}=
+$$
+$$ = E\int_0^ar^2 \phi_{il}(r)\phi_{jl}(r)\,\d r\ y_{jlm} $$
+where both $l$ and $m$ indices are given by the indices of the particular base
+function $v_{ilm}$. The $X$ term is (schematically):
+$$X=\int r^2\sin\theta(r)Y_{lm}(\theta,\varphi)
+(\phi_{il}\nabla\phi_{jl}+\nabla\phi_{il}\phi_{jl})
+\nabla Y_{lm}$$
+There is an interesting identity:
+$$\int r{\bf \hat r} Y_{lm} \nabla Y_{l'm'} \sin\theta\,\d\theta\,\d\varphi=
+0$$
+But it cannot be applied, because we have one more $r$ in the expression.
+Nevertheless the term is probably zero, as can be seen when we compare the weak
+formulation to the one we got directly from the radial equation.
+
+\subsubsection{How Not To Derive The Weak Formulation}
+
+If we forgot that we have to integrate covariantly, this section is devoted
+to what happens if we integrate using the coordinate integration. We would get:
 $$\int_0^a {1\over2}R'(x)v'(x)-{1\over r}R'(x)v(x)+
 \left(V+{l(l+1)\over2r^2}\right)R(x)v(x)\,\d x
 =
@@ -472,60 +527,9 @@ $$
 Keep in mind, that this symmetric version is only correct for $l\ge3$. For
 $l<3$ we need to use our first nonsymmetric version.
 
-A more common approach is to write a weak formulation for
-the 3D problem in cartesian coordinates:
-$$
-\int_\Omega{1\over2}\nabla\psi({\bf x})\nabla v({\bf x})+V(r)\psi({\bf x})v({\bf
-x})\,\d^3 x
-=E\int_\Omega\psi({\bf x})v({\bf x})\,\d^3 x
-$$
-and only then transform to spherical coordinates:
-$$
-\int_0^{2\pi}\d\varphi\int_0^\pi\d\theta\int_0^a\d r
-\left({1\over2}\nabla\psi({\bf x})\nabla v({\bf x})+V(r)\psi({\bf
-x})v({\bf x})\right)r^2\sin\theta=
-$$
-$$
-=
-E\int_0^{2\pi}\d\varphi\int_0^\pi\d\theta\int_0^a\d r\,
-\psi({\bf x})v({\bf x})r^2\sin\theta
-$$
-The 3d eigenvectors $\psi({\bf x})$ however are not spherically symmetric.
-Nevertheless we can still proceed by choosing our basis as
-$$v_{ilm}({\bf x})=\phi_{il}(r)Y_{lm}(\theta, \varphi)$$
-and seek our solution as
-$$\psi({\bf x})=\sum_{jlm}y_{jlm}\phi_{jl}(r)Y_{lm}(\theta, \varphi)$$
-Using the properties of spherical harmonics and the gradient:
-$$\int Y_{lm} Y_{l'm'} \sin\theta\,\d\theta\,\d\varphi=
-\delta_{ll'}\delta_{mm'}$$
-$$\int r^2\nabla Y_{lm} \nabla Y_{l'm'} \sin\theta\,\d\theta\,\d\varphi=
-l(l+1)\delta_{ll'}\delta_{mm'}$$
-$$\nabla f = {\partial f\over \partial r}\boldsymbol{\hat r} + {1\over r}
-{\partial f\over\partial\theta}\boldsymbol{\hat\theta}+{1\over r\sin\theta}
-{\partial f\over\partial\phi}\boldsymbol{\hat\phi}$$
-the weak formulation becomes:
-$$
-\left(\int_0^a
-{1\over2}r^2\phi_{il}'(r)\phi_{jl}'(r)+
-{1\over2}X+
-{l(l+1)\over2}\phi_{il}(r)\phi_{jl}(r)+
-r^2V(r)\phi_{il}(r)\phi_{jl}(r)\,\d r\right)y_{jlm}=
-$$
-$$ = E\int_0^ar^2 \phi_{il}(r)\phi_{jl}(r)\,\d r\ y_{jlm} $$
-where both $l$ and $m$ indices are given by the indices of the particular base
-function $v_{ilm}$. The $X$ term is (schematically):
-$$X=\int r^2\sin\theta(r)Y_{lm}(\theta,\varphi)
-(\phi_{il}\nabla\phi_{jl}+\nabla\phi_{il}\phi_{jl})
-\nabla Y_{lm}$$
-Unfortunately I don't know what to do with the term.
-There is an interesting identity:
-$$\int r{\bf \hat r} Y_{lm} \nabla Y_{l'm'} \sin\theta\,\d\theta\,\d\varphi=
-0$$
-But it cannot be applied, because we have one more $r$ in the expression.
-One would expect it is not zero though, since we should get some mixed term
-$\int\phi(r) \phi'(r)$ as if we first transform to radial coordinates and then
-do the weak formulation as we indicated above.
-
+As you can see, this is something very different to what we got in the previous
+section. First there were lots of technical difficulties and second the final
+result is wrong, since it doesn't correspond to the 3D Schr\"odinger equation.
 
 \section{TODO list}
 
