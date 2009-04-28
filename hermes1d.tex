@@ -402,13 +402,12 @@ $$\int_0^a \left(-{1\over2}R''(r)-{1\over r}R'(r)\right)v(r)r^2 \d r
 $$
 $$
 =\int_0^a -{1\over2}\left(r^2 R'(r)\right)'v(r) \d r
-=\int_0^a {1\over2}r^2 R'(r)v'(r) \d r+[r^2R'(r)v(r)]_0^a=
+=\int_0^a {1\over2}r^2 R'(r)v'(r) \d r-[r^2R'(r)v(r)]_0^a=
 $$
 $$
 =\int_0^a {1\over2} R'(r)v'(r) r^2\d r
 $$
-We used the fact that we have both $R(0)$ and $R(a)$ prescribed, so
-$v(0)=v(a)=0$. The weak formulation is then:
+We used the fact that $R'(a)=0$ and $R'(0)=\rm const.$, so the boundary term vanishes. The weak formulation is then:
 $$\int_0^a {1\over2}R'(r)v'(r)r^2+
 \left(V+{l(l+1)\over2r^2}\right)R(r)v(r)r^2\,\d r
 =
